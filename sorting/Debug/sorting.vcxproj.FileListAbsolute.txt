@@ -1,2 +1,0 @@
-C:\Users\colin\source\repos\colinzhe\interview_questions\sorting\Debug\sorting.exe
-C:\Users\colin\source\repos\colinzhe\interview_questions\sorting\Debug\sorting.pdb
