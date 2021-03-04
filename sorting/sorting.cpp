@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+#include <cassert>
 
 void printArr(int* arr, int len)
 {
@@ -12,8 +13,45 @@ void printArr(int* arr, int len)
     std::cout << '\n';
 }
 
+// bubble sort
+// worst case O(n^2)
+void bubbleSort(int* arr, int len)
+{
+    assert(arr != nullptr || len > 0);
+
+    for (int end{ len }; end > 1; --end) // reduce max index by 1 each time
+    {
+        for (int i{ 0 }; i < end - 1; ++i) // bubbles one largest element to the end
+        {
+            if (arr[i + 1] < arr[i])
+            {
+                std::swap(arr[i + 1], arr[i]); // swap each pair if needed
+            }
+        }
+    }
+}
+
+// selection sort
+// worst case O(n^2)
+void selectionSort(int* arr, int len)
+{
+    for (int start{ 0 }; start < len - 1; ++start) // start with each element starting at index 0
+    {
+        int min = start; // store starting element's index as 'min'
+
+        for (int i{ start }; i < len; ++i) // compare against of subsequent elements
+        {
+            if (arr[i] < arr[min]) // if another is smaller, then set min as its index
+            {
+                min = i;
+            }
+        }
+        std::swap(arr[start], arr[min]); // swap starting element with min element
+    }
+}
+
 // insertion sort
-// avg = worst case = O(n^2)
+// worst case = O(n^2)
 bool insertSort(int* arr, int len)
 {
     if ((arr == nullptr) || (len < 0) || (len == 0)) return false;
@@ -108,6 +146,55 @@ void mergeSort(int* arr, int p, int r)
         mergeSort(arr, q + 1, r); // recursively sort right side
         mergeArr(arr, p, q, r); // merge and actually sort two sub-arrays
     }
+}
+
+// partition array for quick sort
+int partition(int* arr, int p, int r, int len)
+{
+    //std::cout << "partitioning...\n";
+    //std::cout << "p = " << p << ", r = " << r << '\n';
+    int pivot = arr[r]; // store right most element as pivot
+    //std::cout << "pivot = " << pivot << '\n';
+    int i = p - 1; // set i to first element just outside of range
+
+    for (int j{ p }; j < r; ++j) // traverse all elements up to element just before pivot
+    {
+        if (arr[j] < pivot) // if the element at j is smaller than pivot
+        {
+            //std::cout << arr[j] << " is smaller than " << pivot << '\n';
+            ++i; // increment i
+            //std::cout << "swapping " << arr[i] << " with " << arr[j] << '\n';
+            std::swap(arr[i], arr[j]); // swap elements at i and j
+            //printArr(arr, len);
+        }
+        //else // otherwise do nothing
+        //{
+        //    std::cout << arr[j] << " is greater than or equal to " << pivot << '\n';
+        //    std::cout << "do nothing\n";
+        //}
+    }
+
+    //std::cout << "swapping " << arr[i + 1] << " with " << arr[r] << '\n';
+    std::swap(arr[i + 1], arr[r]); // finally, swap pivot element with the first element that is larger
+    //std::cout << "returning pi = " << i + 1 << ", pivot = " << arr[i + 1] << '\n';
+    //printArr(arr, len);
+    return (i + 1); // return the new pivot index
+}
+
+// quick sort
+// worse case = O(n * log n)
+void quickSort(int* arr, int p, int r, int len)
+{
+    if (p >= r) // stop when array size is 1
+    {
+        //std::cout << "p = r = " << p << '\n';
+        return;
+    }
+
+    int pi = partition(arr, p, r, len); // do partition and return the new partition index
+
+    quickSort(arr, p, pi - 1, len); // sort the left side of partition index
+    quickSort(arr, pi + 1, r, len); // sort the right side of partition index
 }
 
 int main()
